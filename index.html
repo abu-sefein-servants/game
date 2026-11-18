@@ -1058,6 +1058,44 @@ html.no-motion *,html.no-motion *::before,html.no-motion *::after{
  filter:drop-shadow(0 4px 14px rgba(0,0,0,.85))}
 .lmarks i{width:1px;height:42px;background:rgba(240,207,122,.42)}
 @media (max-width:360px){ .lmarks img{height:56px} .lmarks{gap:12px} .lhero:before{height:92px} }
+
+/* ═══ شاشة الأدمن ووضع التجربة ═══ */
+.ah2{margin:30px 0 8px;font-family:'Aref Ruqaa',serif;font-size:1.12rem;color:var(--gold);
+ border-top:1px solid var(--line);padding-top:18px}
+.atest{background:var(--panel);border:1px solid var(--edge-2);border-radius:14px;padding:15px 16px;margin-bottom:6px}
+.atest.on{border-color:var(--gold);background:rgba(217,165,60,.07)}
+.atesth{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:9px}
+.atesth b{font-family:'Aref Ruqaa',serif;font-size:1.08rem;color:var(--gold-soft)}
+.atest p{margin:0;font-size:.82rem;line-height:1.9;color:var(--parch2,var(--parchment-2))}
+.atest .awarn{margin-top:9px;color:var(--gold);font-weight:600}
+.aswitch{flex-shrink:0;background:var(--panel-2);border:1px solid var(--line);color:var(--dim);
+ border-radius:999px;padding:7px 18px;font-family:inherit;font-size:.82rem;cursor:pointer;
+ touch-action:manipulation;transition:background .16s,color .16s,border-color .16s}
+.aswitch.on{background:var(--gold-fill);border-color:var(--gold);color:#2a1a04;font-weight:700}
+.amini{background:var(--panel-2);border:1px solid var(--line);color:var(--gold-soft);border-radius:9px;
+ padding:8px 12px;font-family:inherit;font-size:.74rem;cursor:pointer;touch-action:manipulation;
+ align-self:flex-end}
+.amini:hover{border-color:var(--gold)}
+.adot{font-style:normal;font-size:.68rem;font-weight:400;color:var(--dim);
+ border:1px solid var(--line);border-radius:999px;padding:2px 8px;margin-inline-start:7px}
+.adot.on{color:#a9d18e;border-color:rgba(109,156,86,.45)}
+.adot.off{color:#e8927c;border-color:rgba(184,68,47,.42)}
+.aruns{display:grid;gap:7px;margin-top:4px}
+.arun{display:flex;align-items:center;gap:11px;background:var(--panel);border:1px solid var(--edge-2);
+ border-radius:11px;padding:10px 13px;font-size:.82rem}
+.arn{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.arn i{display:block;font-style:normal;font-size:.68rem;color:var(--dim)}
+.arc{flex-shrink:0;color:var(--parchment-2);font-size:.76rem}
+.ars{flex-shrink:0;text-align:center;min-width:52px;font-family:'Aref Ruqaa',serif;
+ font-size:1rem;color:var(--gold);font-variant-numeric:tabular-nums}
+.ars i{display:block;font-style:normal;font-family:'Alexandria',sans-serif;font-size:.63rem;color:var(--dim)}
+.art{flex-shrink:0}
+.testbar{position:fixed;left:0;right:0;bottom:0;z-index:80;display:flex;align-items:center;
+ justify-content:center;gap:14px;background:var(--gold-fill);color:#2a1a04;
+ padding:9px 14px;font-size:.8rem;font-weight:600;box-shadow:0 -6px 22px rgba(0,0,0,.5)}
+.testbar button{background:#2a1a04;color:var(--gold-soft);border:0;border-radius:999px;
+ padding:5px 14px;font-family:inherit;font-size:.76rem;cursor:pointer;touch-action:manipulation}
+body:has(.testbar){padding-bottom:46px}
 </style>
 </head>
 
@@ -1070,7 +1108,7 @@ html.no-motion *,html.no-motion *::before,html.no-motion *::after{
 <div class="wrap">
   <div class="hud">
     <div class="hud-l">
-      <span class="hud-title">جوّه الحكاية <b class="ver">v١٢</b></span>
+      <span class="hud-title">جوّه الحكاية <b class="ver">v١٤</b></span>
       <span class="hud-place" id="place">مرقس — الأصحاح الأول</span>
     </div>
     <div class="hud-r">
@@ -2933,6 +2971,7 @@ function renderMenu(){
 function startChapter(n){
   if(st.kid){ st.lvl=0; st.free=1; beginChapter(n); return; }      /* الأطفال بره المسابقة */
   if(!FB.uid){ st.screen="login"; st.loginMode="in"; save(); route(); return; }
+  if(isAdmin() && st.test){ st.free = 1; beginChapter(n); return; }   /* تجربة — مفيش تسجيل */
   if(!FB.me || !FB.me.n){ go("profile"); return; }
 
   var R = runState(n);
@@ -2945,7 +2984,8 @@ function startChapter(n){
         : "فيه حاجة غلط في إعدادات الأصحاح ده. كلّم أبانوب قبل تلعب.");
       return;
     }
-    if(!confirm("أصحاح "+ar(n)+" — "+ar(cs.q)+" سؤال، ومعاك "+ar(cs.mn)+" دقيقة.\n\n"+
+    if(!confirm("أصحاح "+ar(n)+" — "+ar(cs.q)+" سؤال.\n\n"+
+                "لازم تخلّصه قبل ما يقفل: "+fmtDay(cs.c)+" بالليل.\n\n"+
                 "خد بالك: أول ما تبدأ، كل إجابة بتتسجّل على طول ومش بتتغيّر. "+
                 "ولو خرجت في النص، اللي جاوبتهوش بيتحسب صفر.\n\nتبدأ؟")) return;
     st.free = 0;
@@ -3103,67 +3143,140 @@ function renderBoard(){
 }
 
 /* ═══════════════ شاشة الأدمن — المواعيد ═══════════════ */
+/* ═══════════════ شاشة الأدمن ═══════════════
+   تظهر لإيميل أبانوب بس. منها بتظبّط المواعيد، وبتفتح أصحاح حالاً
+   عشان تجرّبه، وبتشوف كل المحاولات.                              */
 function renderAdmin(){
   if(!isAdmin()){ go("menu"); return; }
-  placeEl.textContent="إدارة الموسم";
-  var S = (FB.season && FB.season.ch) || {};
+  placeEl.textContent = "إدارة الموسم";
+
+  function pad(x){ return (x<10?"0":"")+x; }
+  function iso(t){ var d=new Date(t); return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate()); }
+
+  var S = FB.season || {};
   var rowsHtml = "";
   for(var i=1;i<=SEASON_N;i++){
-    var c = S[String(i)] || {}, o=c.o?ms(c.o):0, cl=c.c?ms(c.c):0;
-    rowsHtml += '<div class="arow"><b>أصحاح '+ar(i)+'</b>'+
+    var c = S[String(i)] || {}, o=c.o?ms(c.o):0, cl=c.c?ms(c.c):0,
+        stt = chState(i).s,
+        dot = stt==="open" ? '<em class="adot on">مفتوح</em>'
+            : stt==="soon" ? '<em class="adot">لسه</em>'
+            : stt==="shut" ? '<em class="adot off">قفل</em>' : '<em class="adot">فاضي</em>';
+    rowsHtml += '<div class="arow"><b>أصحاح '+ar(i)+' '+dot+'</b>'+
       '<label>يفتح<input type="date" id="ao'+i+'" value="'+(o?iso(o):"")+'"></label>'+
       '<label>يقفل<input type="date" id="ac'+i+'" value="'+(cl?iso(cl):"")+'"></label>'+
       '<label>أسئلة<input type="number" id="aq'+i+'" min="1" max="40" value="'+(c.q||(i===1?20:15))+'"></label>'+
-      '<label>دقايق<input type="number" id="am'+i+'" min="10" max="240" value="'+(c.mn||60)+'"></label>'+
+      '<button class="amini" data-open="'+i+'">افتح دلوقتي</button>'+
       '</div>';
   }
-  root.innerHTML = shellTop("إدارة الموسم","المواعيد وعدد الأسئلة والوقت")+
+
+  /* ── المحاولات ── */
+  var runs = Object.keys(FB.runs).map(function(k){ return FB.runs[k]; })
+    .filter(function(r){ return r && r.u; })
+    .sort(function(a,b){ return ms(b.at) - ms(a.at); });
+  var runsHtml = runs.length ? runs.map(function(r){
+    var p = FB.players[r.u] || {}, cs = chState(+r.ch),
+        state = r.done ? '<em class="adot on">خلص</em>'
+                       : '<em class="adot off">متجمّد عند '+ar(r.i||0)+'</em>';
+    return '<div class="arun"><span class="arn">'+esc(p.n||"لاعب")+
+      (p.mt?'<i>'+esc(p.mt)+'</i>':'')+'</span>'+
+      '<span class="arc">أصحاح '+ar(r.ch)+'</span>'+
+      '<span class="ars">'+ar(r.sc||0)+'<i>من '+ar((cs.q||0)*10)+'</i></span>'+
+      '<span class="art">'+state+'</span></div>';
+  }).join("") : '<p class="hint">لسه محدش لعب.</p>';
+
+  var tm = !!st.test;
+  root.innerHTML = shellTop("إدارة الموسم","المواعيد والتجربة والمحاولات")+
+
     '<div class="slate aslate">'+
-      '<p class="rmsg">الأصحاح بيفتح الساعة ١٢ بالليل في يوم الفتح، وبيقفل ١١:٥٩ بالليل في يوم القفل.</p>'+
+
+      /* ── وضع التجربة ── */
+      '<div class="atest'+(tm?" on":"")+'">'+
+        '<div class="atesth"><b>وضع التجربة</b>'+
+          '<button class="aswitch'+(tm?" on":"")+'" id="a-test">'+(tm?"مفتوح":"مقفول")+'</button></div>'+
+        '<p>وهو مفتوح: تلعب أي أصحاح، أي عدد مرات، حتى المقفول — و<b>مفيش حاجة بتتسجّل خالص</b>. '+
+        'محاولتك الحقيقية بتفضل زي ما هي.</p>'+
+        (tm?'<p class="awarn">مفتوح دلوقتي. اقفله قبل ما تلعب جد.</p>':'')+
+      '</div>'+
+
+      /* ── المواعيد ── */
+      '<h4 class="ah2">المواعيد</h4>'+
+      '<p class="rmsg">الأصحاح بيفتح ١٢ بالليل في يوم الفتح، وبيقفل ١١:٥٩ بالليل في يوم القفل. '+
+      'اللي يبدأ لازم يخلّص قبل ميعاد القفل، وإلا بيتجمّد على اللي جاوبه.</p>'+
       '<div class="ctrl"><button class="btn btn-ghost" id="afill">املا الجدول من ١ ديسمبر ٢٠٢٦</button></div>'+
       '<div class="atable">'+rowsHtml+'</div>'+
       '<p class="err" id="aerr">&nbsp;</p>'+
-      '<div class="ctrl mtop"><button class="btn btn-go" id="asave">احفظ المواعيد</button>'+
+      '<div class="ctrl"><button class="btn btn-go" id="asave">احفظ المواعيد</button></div>'+
+
+      /* ── المحاولات ── */
+      '<h4 class="ah2">المحاولات ('+ar(runs.length)+')</h4>'+
+      '<p class="rmsg">للعلم بس — مفيش مسح. اللي بدأ لازم يخلّص.</p>'+
+      '<div class="aruns">'+runsHtml+'</div>'+
+
+      '<div class="ctrl mtop">'+
+        '<button class="btn btn-ghost" id="arf">حدّث</button>'+
         '<button class="btn btn-ghost" id="abk">رجوع</button></div>'+
     '</div>';
 
-  function iso(t){ var d=new Date(t); return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate()); }
-  function pad(x){ return (x<10?"0":"")+x; }
+  /* ── الأزرار ── */
+  document.getElementById("a-test").onclick = function(){
+    st.test = !st.test; save(); snd("tap"); renderAdmin(); drawHudBtn();
+  };
+  document.getElementById("abk").onclick = function(){ go("menu"); };
+  document.getElementById("arf").onclick = function(){
+    busy("بيحدّث…"); fbLoadAll(function(){ unbusy(); renderAdmin(); });
+  };
 
-  document.getElementById("afill").onclick=function(){
-    /* أصحاح ١: ١ ديسمبر لـ ٥ ديسمبر. وبعد كده كل أصحاح أسبوع، من الحد للسبت */
+  document.getElementById("afill").onclick = function(){
     var open = new Date(2026,11,1), close = new Date(2026,11,5);
     for(var i=1;i<=SEASON_N;i++){
       document.getElementById("ao"+i).value = iso(+open);
       document.getElementById("ac"+i).value = iso(+close);
       document.getElementById("aq"+i).value = (i===1?20:15);
-      document.getElementById("am"+i).value = 60;
       open  = new Date(+close + 86400000);
       close = new Date(+open  + 6*86400000);
     }
-    document.getElementById("aerr").textContent="اتملا. راجعه واحفظ.";
+    document.getElementById("aerr").textContent = "اتملا. راجعه واحفظ.";
   };
-  document.getElementById("abk").onclick=function(){ go("menu"); };
-  document.getElementById("asave").onclick=function(){
-    var eb=document.getElementById("aerr"), ch={}, bad=0;
+
+  /* افتح أصحاح حالاً — بيحفظ على طول */
+  Array.prototype.forEach.call(root.querySelectorAll("[data-open]"), function(b){
+    b.onclick = function(){
+      var i = +b.dataset.open;
+      if(!confirm("هيفتح أصحاح "+ar(i)+" من دلوقتي ولمدة أسبوع — لكل الناس، مش ليك لوحدك.\n\n"+
+                  "لو إنت عايز تجرّب بس، اقفل ده وافتح «وضع التجربة» بدله.\n\nتفتحه؟")) return;
+      var q = +document.getElementById("aq"+i).value || (i===1?20:15);
+      var o = new Date(Date.now()-60000), c = new Date(Date.now()+7*86400000);
+      busy("بيفتح…");
+      FB.db.collection("gcfg").doc(String(i)).set({
+        o: firebase.firestore.Timestamp.fromDate(o),
+        c: firebase.firestore.Timestamp.fromDate(c), q: q
+      }).then(function(){ return new Promise(function(r){ fbLoadAll(r); }); })
+        .then(function(){ unbusy(); snd("win"); renderAdmin(); })
+        .catch(function(e){ unbusy(); document.getElementById("aerr").textContent =
+          e && e.code==="permission-denied" ? "Firebase رفض — اعمل Publish للقواعد الجديدة." : "مفيش حفظ. النت؟"; });
+    };
+  });
+
+  document.getElementById("asave").onclick = function(){
+    var eb=document.getElementById("aerr"), jobs=[], bad=0, n=0;
     for(var i=1;i<=SEASON_N;i++){
       var o=document.getElementById("ao"+i).value, c=document.getElementById("ac"+i).value,
-          q=+document.getElementById("aq"+i).value, m=+document.getElementById("am"+i).value;
-      if(!o||!c){ continue; }
+          q=+document.getElementById("aq"+i).value;
+      if(!o||!c) continue;
       var ot=new Date(o+"T00:00:00"), ct=new Date(c+"T23:59:59");
-      if(ct<=ot){ bad=i; break; }
-      if(!(q>0)||!(m>0)){ bad=i; break; }
-      ch[String(i)]={ o:firebase.firestore.Timestamp.fromDate(ot),
-                      c:firebase.firestore.Timestamp.fromDate(ct), q:q, mn:m };
+      if(ct<=ot || !(q>0)){ bad=i; break; }
+      jobs.push([String(i), { o:firebase.firestore.Timestamp.fromDate(ot),
+                              c:firebase.firestore.Timestamp.fromDate(ct), q:q }]);
+      n++;
     }
-    if(bad){ eb.textContent="أصحاح "+ar(bad)+" فيه حاجة غلط — ميعاد القفل لازم بعد الفتح، والأرقام أكبر من صفر."; return; }
-    if(!Object.keys(ch).length){ eb.textContent="املا المواعيد الأول."; return; }
-    busy("بيحفظ…");
-    FB.db.collection("gcfg").doc("season").set({ ch:ch, n:SEASON_N, at:sv() })
-      .then(function(){ return fbLoadAll(function(){}); })
-      .then(function(){ unbusy(); eb.textContent="اتحفظت ✓"; snd("win"); setTimeout(function(){ go("menu"); },900); })
+    if(bad){ eb.textContent="أصحاح "+ar(bad)+" فيه حاجة غلط — ميعاد القفل لازم بعد الفتح، وعدد الأسئلة أكبر من صفر."; return; }
+    if(!n){ eb.textContent="املا المواعيد الأول."; return; }
+    busy("بيحفظ "+ar(n)+" أصحاح…");
+    Promise.all(jobs.map(function(j){ return FB.db.collection("gcfg").doc(j[0]).set(j[1]); }))
+      .then(function(){ return new Promise(function(res){ fbLoadAll(res); }); })
+      .then(function(){ unbusy(); eb.textContent="اتحفظت ✓"; snd("win"); renderAdmin(); })
       .catch(function(e){ unbusy(); eb.textContent = e&&e.code==="permission-denied"
-        ? "Firebase رفض — تأكد إنك داخل بإيميلك إنت." : "مفيش حفظ. النت؟"; });
+        ? "Firebase رفض — تأكد إنك داخل بإيميلك إنت، وإن القواعد اتعملها Publish." : "مفيش حفظ. النت؟"; });
   };
 }
 function esc(s){ return String(s).replace(/[&<>"]/g,function(c){
@@ -3286,7 +3399,7 @@ function renderAbout(){
      '<div class="madeby">'+
        '<span class="mbl">من إعداد</span>'+
        '<b>'+CHURCH+'</b>'+
-       '<span class="buildv">جوّه الحكاية · إصدار ١٢</span>'+
+       '<span class="buildv">جوّه الحكاية · إصدار ١٤</span>'+
      '</div>'+
 
    '</div>'+
@@ -3295,8 +3408,17 @@ function renderAbout(){
 }
 
 /* ---- router ---- */
+function testBar(){
+  var b = document.getElementById("testbar");
+  if(isAdmin() && st.test){
+    if(!b){ b=document.createElement("div"); b.id="testbar"; b.className="testbar"; document.body.appendChild(b); }
+    b.innerHTML = '<span>وضع التجربة مفتوح — مفيش حاجة بتتسجّل</span>'+
+                  '<button id="tb-x">اقفله</button>';
+    document.getElementById("tb-x").onclick = function(){ st.test=0; save(); snd("tap"); route(); };
+  } else if(b) b.remove();
+}
 function route(){
-  applyPrefs();
+  applyPrefs(); testBar();
   var inPlay = st.screen==="play";
   trackEl.style.display = inPlay ? "" : "none";
   scoreEl.style.display = (inPlay && st.phase==="play") ? "" : "none";
@@ -3373,11 +3495,11 @@ function fbInit(cb){
 function fbLoadAll(cb){
   if(!FB.on || !FB.uid){ cb && cb(); return; }
   Promise.all([
-    FB.db.collection("gcfg").doc("season").get(),
+    FB.db.collection("gcfg").get(),
     FB.db.collection("gplayers").get(),
     FB.db.collection("gruns").get()
   ]).then(function(r){
-    FB.season = r[0].exists ? r[0].data() : null;
+    FB.season = {}; r[0].forEach(function(d){ FB.season[d.id] = d.data(); });
     FB.players = {}; r[1].forEach(function(d){ FB.players[d.id] = d.data(); });
     FB.runs    = {}; r[2].forEach(function(d){ FB.runs[d.id]    = d.data(); });
     FB.me = FB.players[FB.uid] || null;
@@ -3390,16 +3512,13 @@ function fbLoadAll(cb){
 }
 
 /* ═══ إعدادات الأصحاح: o فتح · c قفل · q عدد الأسئلة · mn الدقايق ═══ */
-function chCfg(n){
-  var c = FB.season && FB.season.ch && FB.season.ch[String(n)];
-  return c || null;
-}
+function chCfg(n){ return (FB.season && FB.season[String(n)]) || null; }
 function chState(n){
   var c = chCfg(n);
   if(!c || !c.o || !c.c) return { s:"none" };
   var now = Date.now(), o = ms(c.o), cl = ms(c.c);
   return { s: now < o ? "soon" : (now > cl ? "shut" : "open"),
-           o:o, c:cl, q:(c.q||0), mn:(c.mn||60) };
+           o:o, c:cl, q:(c.q||0) };
 }
 function fmtDay(t){
   var d = new Date(t),
@@ -3478,9 +3597,17 @@ function fbAnswer(choice, gained, last, ok, bad){
 
 /* ═══ لوحة الصدارة: مجموع الدرجات، وبعدين عدد الأصحاحات، وبعدين الوقت ═══ */
 function boardRows(){
-  var by = {};
+  /* محاولة واحدة لكل لاعب في كل أصحاح — لو اتعملت دوكات زيادة،
+     الأقدم هي اللي بتتحسب. كل الأجهزة بتحسب نفس الحساب. */
+  var first = {};
   Object.keys(FB.runs).forEach(function(k){
-    var r = FB.runs[k]; if(!r || !r.u) return;
+    var r = FB.runs[k]; if(!r || !r.u || !r.ch) return;
+    var key = r.u + "|" + r.ch, p = first[key];
+    if(!p || ms(r.at) < ms(p.at)) first[key] = r;
+  });
+  var by = {};
+  Object.keys(first).forEach(function(k){
+    var r = first[k];
     var b = by[r.u] || (by[r.u] = { u:r.u, sc:0, n:0, t:0, ch:{} });
     b.sc += (r.sc || 0);
     b.ch[r.ch] = { sc:(r.sc||0), done:!!r.done, i:(r.i||0) };
@@ -3499,10 +3626,8 @@ function boardRows(){
   return rows;
 }
 function myTotal(){
-  var t = 0;
-  Object.keys(FB.runs).forEach(function(k){
-    var r = FB.runs[k]; if(r && r.u === FB.uid) t += (r.sc||0);
-  });
+  var rows = boardRows(), t = 0;
+  rows.forEach(function(r){ if(r.u === FB.uid) t = r.sc; });
   return t;
 }
 

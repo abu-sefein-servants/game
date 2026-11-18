@@ -2,7 +2,7 @@
    الصفحة نفسها: الشبكة الأول (عشان التحديث يوصل فورًا)، والكاش احتياطي لو مفيش نت.
    الباقي: الكاش الأول.
    غيّر رقم CACHE لما تنشر نسخة جديدة. */
-var CACHE = "gowwa-v3";
+var CACHE = "gowwa-v5";
 var CORE  = ["./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png"];
 
 self.addEventListener("install", function(e){
